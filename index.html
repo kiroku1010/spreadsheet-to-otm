@@ -64,7 +64,11 @@
     <div class="container">
         <div class="input-section">
             <label for="spreadsheet_input">スプレッドシートデータ (タブ区切り) にゃ:</label>
-            <textarea id="spreadsheet_input" onkeyup="convertToJson()" placeholder="ここにスプレッドシートのデータを貼り付けるか入力するにゃ♡></textarea>
+            <textarea id="spreadsheet_input" onkeyup="convertToJson()" placeholder="ここにスプレッドシートのデータを貼り付けるか入力するにゃ♡
+例:
+綴り	発音記号	タグ	品詞	訳語	類義語	対義語	熟語
+ai	ai	単語	代名詞	私, 僕			
+mo:v	mo:v	単語	名詞, 動詞, 形容詞	動き, 活動, 行動, 動作, 動く, 活動する, 行動する, 動作する, 活動的な			"></textarea>
             <button onclick="convertToJson()">JSONに変換するにゃ！♡</button>
         </div>
 
@@ -245,7 +249,17 @@
 
         // ページ読み込み時にサンプルデータをセットして変換するにゃ
         document.addEventListener('DOMContentLoaded', () => {
-            const initialSpreadsheetInput = ``;
+            const initialSpreadsheetInput = `綴り	発音記号	タグ	品詞	訳語	類義語	対義語	熟語
+ai	ai	単語	代名詞	私, 僕			
+mo:v	mo:v	単語	名詞, 動詞, 形容詞	動き, 活動, 行動, 動作, 動く, 活動する, 行動する, 動作する, 活動的な			
+pipo	pipo	単語	名詞	人類, 人間, 人			pipo gud
+gud	gud	単語	名詞, 動詞, 形容詞	善, 良くする, 良い		bad	pipo gud
+bad	bad	単語	名詞, 動詞, 形容詞	悪, 邪悪, 悪事, 悪くする, 悪い, 粗悪な, 劣悪な		gud	
+pipo gud	pipo gud	熟語	名詞	親切な人, 善良な人, 同盟者, 味方, 友人, 良い人			pipo, gud
+iz	iz	単語	繋辞	～だ, ～である, ～です			
+ju	ju	単語	代名詞	あなた, 君			
+hi	hi	単語	代名詞	彼, 彼女			
+`;
             document.getElementById('spreadsheet_input').value = initialSpreadsheetInput;
             convertToJson(); // 初回ロード時に変換を実行するにゃ
         });
