@@ -68,7 +68,7 @@
 例:
 綴り	発音記号	タグ	品詞	訳語	類義語	対義語	熟語
 ai	ai	単語	代名詞	私, 僕			
-mo:v	mo:v	単語	名詞, 動詞, 形容詞	動き, 活動, 行動, 動作, 動く, 活動する, 行動する, 動作する, 活動的な			"></textarea>
+mo:v	mo:v	単語	名詞, 動詞, 形容詞	動き, 活動, 行動, 動作/ 動く, 活動する, 行動する, 動作する/ 活動的な			"></textarea>
             <button onclick="convertToJson()">JSONに変換するにゃ！♡</button>
         </div>
 
@@ -126,13 +126,17 @@ mo:v	mo:v	単語	名詞, 動詞, 形容詞	動き, 活動, 行動, 動作, 動�
                     if ('訳語' in colMap && rowValues[colMap['訳語']]) {
                         const posList = ('品詞' in colMap && rowValues[colMap['品詞']]) ? rowValues[colMap['品詞']].split(',').map(p => p.trim()) : ['不明'];
                         const rawFormsStr = rowValues[colMap['訳語']];
-                        const forms = rawFormsStr.split(',').map(f => f.trim());
+                        const formsGroupedByPos = rawFormsStr.split('/').map(group => group.trim()); // ここで / で分割するにゃ
 
-                        for (const pos of posList) {
+                        for (let i = 0; i < posList.length; i++) {
+                            const pos = posList[i];
+                            const formsForPos = formsGroupedByPos[i] ? formsGroupedByPos[i].split(',').map(f => f.trim()) : []; // 各グループをさらに , で分割するにゃ
+                            const rawFormsForPos = formsGroupedByPos[i] || ''; // そのままの文字列を保存するにゃ
+
                             wordEntry["translations"].push({
                                 "title": pos,
-                                "forms": forms,
-                                "rawForms": rawFormsStr
+                                "forms": formsForPos,
+                                "rawForms": rawFormsForPos
                             });
                         }
                     }
@@ -155,10 +159,6 @@ mo:v	mo:v	単語	名詞, 動詞, 形容詞	動き, 活動, 行動, 動作, 動�
             }
 
             // relations のためのマップを作成するにゃ
-            // IDでエントリを検索できるようにするにゃ (ここでは使用しないけど、将来のために残すにゃ)
-            // const idToWordEntry = {};
-            // wordsList.forEach(entry => { idToWordEntry[entry.entry.id] = entry; });
-            
             const formToWordEntry = {};
             wordsList.forEach(entry => { formToWordEntry[entry.entry.form] = entry; });
 
@@ -251,7 +251,7 @@ mo:v	mo:v	単語	名詞, 動詞, 形容詞	動き, 活動, 行動, 動作, 動�
         document.addEventListener('DOMContentLoaded', () => {
             const initialSpreadsheetInput = `綴り	発音記号	タグ	品詞	訳語	類義語	対義語	熟語
 ai	ai	単語	代名詞	私, 僕			
-mo:v	mo:v	単語	名詞, 動詞, 形容詞	動き, 活動, 行動, 動作, 動く, 活動する, 行動する, 動作する, 活動的な			
+mo:v	mo:v	単語	名詞, 動詞, 形容詞	動き, 活動, 行動, 動作/ 動く, 活動する, 行動する, 動作する/ 活動的な			
 pipo	pipo	単語	名詞	人類, 人間, 人			pipo gud
 gud	gud	単語	名詞, 動詞, 形容詞	善, 良くする, 良い		bad	pipo gud
 bad	bad	単語	名詞, 動詞, 形容詞	悪, 邪悪, 悪事, 悪くする, 悪い, 粗悪な, 劣悪な		gud	
