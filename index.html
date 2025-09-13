@@ -75,9 +75,10 @@
             <label for="spreadsheet_input">スプレッドシートデータ (タブ区切り) にゃ:</label>
             <textarea id="spreadsheet_input" onkeyup="convertToJson()" placeholder="ここにスプレッドシートのデータを貼り付けるか入力するにゃ♡
 例:
-綴り 発音記号 タグ 品詞 訳語 類義語 対義語 熟語
-ai ai 単語 代名詞 私, 僕
-mo:v mo:v 単語 名詞, 動詞, 形容詞 動き, 活動, 行動, 動作/ 動く, 活動する, 行動する, 動作する/ 活動的な "></textarea>
+綴り	発音記号	タグ	品詞	訳語	類義語	対義語	熟語
+ai	ai	単語	代名詞	私, 僕			
+mo:v	mo:v	単語	名詞, 動詞, 形容詞	動き, 活動, 行動, 動作/ 動く, 活動する, 行動する, 動作する/ 活動的な			
+"></textarea>
             <button onclick="convertToJson()">JSONに変換するにゃ！♡</button>
         </div>
         <div class="output-section">
@@ -86,6 +87,7 @@ mo:v mo:v 単語 名詞, 動詞, 形容詞 動き, 活動, 行動, 動作/ 動�
         </div>
     </div>
     <script>
+        // キミのPythonコードをJavaScriptに変換した部分にゃ
         function convertSpreadsheetToJson(spreadsheetData) {
             const lines = spreadsheetData.trim().split('\n');
             if (lines.length === 0 || lines[0].trim() === '') {
@@ -132,7 +134,7 @@ mo:v mo:v 単語 名詞, 動詞, 形容詞 動き, 活動, 行動, 動作/ 動�
                     if ('訳語' in colMap && rowValues[colMap['訳語']]) {
                         const rawFormsStr = rowValues[colMap['訳語']];
                         const posList = ('品詞' in colMap && rowValues[colMap['品詞']]) ? rowValues[colMap['品詞']].split(',').map(p => p.trim()) : ['不明'];
-
+                        
                         // 訳語にスラッシュが含まれているかチェックにゃ
                         if (rawFormsStr.includes('/')) {
                             const formsGroupedByPos = rawFormsStr.split('/').map(group => group.trim());
@@ -256,6 +258,30 @@ mo:v mo:v 単語 名詞, 動詞, 形容詞 動き, 活動, 行動, 動作/ 動�
             };
             return JSON.stringify(jsonOutput, null, 4);
         }
+
+        // テキストエリアの入力が変更されたらJSONを更新する関数にゃ
+        function convertToJson() {
+            const spreadsheetInput = document.getElementById('spreadsheet_input').value;
+            const jsonOutput = convertSpreadsheetToJson(spreadsheetInput);
+            document.getElementById('json_output').value = jsonOutput;
+        }
+
+        // ページ読み込み時にサンプルデータをセットして変換するにゃ
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialSpreadsheetInput = `綴り	発音記号	タグ	品詞	訳語	類義語	対義語	熟語
+ai	ai	単語	代名詞	私, 僕			
+mo:v	mo:v	単語	名詞, 動詞, 形容詞	動き, 活動, 行動, 動作/ 動く, 活動する, 行動する, 動作する/ 活動的な			
+pipo	pipo	単語	名詞	人類, 人間, 人			pipo gud
+gud	gud	単語	名詞, 動詞, 形容詞	善, 良くする, 良い		bad	pipo gud
+bad	bad	単語	名詞, 動詞, 形容詞	悪, 邪悪, 悪事, 悪くする, 悪い, 粗悪な, 劣悪な		gud	
+pipo gud	pipo gud	熟語	名詞	親切な人, 善良な人, 同盟者, 味方, 友人, 良い人			pipo, gud
+iz	iz	単語	繋辞	～だ, ～である, ～です			
+ju	ju	単語	代名詞	あなた, 君			
+hi	hi	単語	代名詞	彼, 彼女			
+`;
+            document.getElementById('spreadsheet_input').value = initialSpreadsheetInput;
+            convertToJson(); // 初回ロード時に変換を実行するにゃ
+        });
     </script>
 </body>
 
